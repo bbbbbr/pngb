@@ -10,8 +10,11 @@ EXE = pngb
 CFLAGS = $(INCS)
 LFLAGS = -s
 
-$(EXE):	$(OBJS)
+$(EXE):	$(BUILDDIR) $(OBJS)
 	$(CC) $(CFLAGS) -Wl,$(LFLAGS) -o $(OUTDIR)/$(EXE) $(OBJS)
+
+$(BUILDDIR) :
+	mkdir $(BUILDDIR) 
 
 $(BUILDDIR)/lodepng.o: $(LODEPNGDIR)/lodepng.c
 	$(CC) $(CFLAGS) -c $(LODEPNGDIR)/lodepng.c -o $(BUILDDIR)/lodepng.o

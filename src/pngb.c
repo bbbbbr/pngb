@@ -31,6 +31,9 @@
 #include "lodepng.h"
 #include "pngb.h"
 
+#include <stdio.h>
+#include <ctype.h>
+
 #define MIN(a, b) (a < b ? a : b)
 
 OPTIONS globalOpts;
