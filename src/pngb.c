@@ -684,14 +684,16 @@ void gbdk_c_code_output(PICDATA *gbpic, FILE *f){
 	/* ~~~~~~~~~~~~~~ STEP 3 (TILE/SPRITE ATTRIBUTES) ~~~~~~~~~~~~~~~~~~~~~~*/
 	/*	For the most of it, the "attributes" are the palette, which is the
 		lowest 3 bits for both sprites and BG/WIN tiles. */
-	fprintf (f, "const unsigned char %s_att[] = {", globalOpts.name);
-	for (t=0; t < tattr; t++){
-		if (t % gbpic->cols == 0) fputs("\n\t", f);
-		fprintf (f, "0x%02x", globalOpts.palnumber);
-		if (t < tattr-1) fputs (", ", f);
+	if (globalOpts.create_palette){
+		fprintf (f, "const unsigned char %s_att[] = {", globalOpts.name);
+		for (t=0; t < tattr; t++){
+			if (t % gbpic->cols == 0) fputs("\n\t", f);
+			fprintf (f, "0x%02x", globalOpts.palnumber);
+			if (t < tattr-1) fputs (", ", f);
+		}
+		fputs("\n};\n\n", f);
 	}
-	fputs("\n};\n\n", f);
-
+	
 	/* ~~~~~~~~~~~~~~ STEP 4 (TILE/SPRITE MAP) ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 	if (globalOpts.create_map){
 		fprintf (f, "const unsigned char %s_map[] = {", globalOpts.name);
@@ -702,7 +704,7 @@ void gbdk_c_code_output(PICDATA *gbpic, FILE *f){
 		}
 		fputs("\n};\n\n", f);
 	}
-
+	
 	/* ~~~~~~~~~~~~~~ STEP 5 (SAMPLE CODE) ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 	if (globalOpts.test_code){
 		if (globalOpts.type == TARGET_SPRITE){
