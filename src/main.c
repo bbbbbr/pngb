@@ -42,6 +42,7 @@ void reset_opts(){
 
 	globalOpts.type = TARGET_BKG;
 	globalOpts.baseindex = 0;
+	globalOpts.bank = 0;
 	strcpy(globalOpts.name, "gbpic");
 }
 
@@ -163,6 +164,14 @@ void ExtractFileName(char* path, char* file_name, int include_bank) {
 	}
 }
 
+int GetBank(char* str) {
+	char* bank_info = strstr(str, ".b");
+	if(bank_info) {
+		return atoi(bank_info + 2);
+	}
+	return 0;
+}
+
 /*###########################################################################
  ##                                                                        ##
  ##                                   M A I N                              ##
@@ -257,7 +266,8 @@ int main(int argc, char *argv[]){
 			if (infile[0] == 0) {
 				/* assume this is the input file */
 				strncpy (infile, argv[a], sizeof(infile)-1);
-				ExtractFileName(infile, globalOpts.name, 1);
+				ExtractFileName(infile, globalOpts.name, 0);
+				globalOpts.bank = GetBank(infile);
 			} else if (outfile[0] == 0){
 				/* if the input file is already defined, this must be the
 				output file */
@@ -303,6 +313,7 @@ int main(int argc, char *argv[]){
 	verbose (" Tile reduction  : %s\n", (globalOpts.tile_reduction ? "YES" : "NO"));
 	verbose ("\n");
 
+	fprintf	(output, "#pragma bank %d\n", globalOpts.bank);
 	code_disclaimer_c (infile, outfile, output);
 	gbdk_c_code_output (gbdata, output);
 	free_gb_pict(gbdata);

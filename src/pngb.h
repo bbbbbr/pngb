@@ -79,6 +79,7 @@ typedef struct {
 	BYTE baseindex;				/* Index of the first sprite/tile that will be defined.					*/
 	int verbose;				/* Set to != 0 for detailed log output of the process.					*/
 	char name[256];				/* Sprite/tileset name.                                                 */
+	int bank;
 } OPTIONS;
 
 typedef struct{

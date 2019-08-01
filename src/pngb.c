@@ -681,6 +681,22 @@ void gbdk_c_code_output(PICDATA *gbpic, FILE *f){
 		}
 		fputs ((t<gbpic->total_tiles-1? ",\n" : "\n};\n\n"), f);
 	}
+	
+	fprintf(f, "\n#include \"TilesInfo.h\"\n");
+	fprintf(f, "const struct TilesInfoInternal %s_internal = {\n", globalOpts.name);
+	fprintf(f, "\t%d, //width\n", 8);
+	fprintf(f, "\t%d, //height\n", 8);
+	fprintf(f, "\t%d, //num_tiles\n", gbpic->total_tiles);
+	fprintf(f, "\t%s_tiles, //tiles\n", globalOpts.name);
+	fprintf(f, "\t0, //CGB palette\n");
+	fprintf(f, "};");
+
+	fprintf(f, "\nstruct TilesInfo %s = {\n", globalOpts.name);
+	fprintf(f, "\t%d, //bank\n", globalOpts.bank);
+	fprintf(f, "\t&%s_internal, //data\n", globalOpts.name);
+	fprintf(f, "};\n\n");
+	
+	
 	/* ~~~~~~~~~~~~~~ STEP 3 (TILE/SPRITE ATTRIBUTES) ~~~~~~~~~~~~~~~~~~~~~~*/
 	/*	For the most of it, the "attributes" are the palette, which is the
 		lowest 3 bits for both sprites and BG/WIN tiles. */
@@ -704,6 +720,20 @@ void gbdk_c_code_output(PICDATA *gbpic, FILE *f){
 		}
 		fputs("\n};\n\n", f);
 	}
+	
+	fprintf(f, "\n#include \"MapInfo.h\"\n");
+	fprintf(f, "const struct MapInfoInternal %s_internal = {\n", globalOpts.name);
+	fprintf(f, "\t%d, //width\n", gbpic->cols);
+	fprintf(f, "\t%d, //height\n", gbpic->rows);
+	fprintf(f, "\t%s_map, //map\n", globalOpts.name);
+	fprintf(f, "\t%s, //attributes\n", "0"); //TODO
+	fprintf(f, "\t%s_tiles, //tiles info\n", globalOpts.name);
+	fprintf(f, "};");
+
+	fprintf(f, "\nstruct MapInfo %s = {\n", globalOpts.name);
+	fprintf(f, "\t%d, //bank\n", globalOpts.bank);
+	fprintf(f, "\t&%s_internal, //data\n", globalOpts.name);
+	fprintf(f, "};\n");
 	
 	/* ~~~~~~~~~~~~~~ STEP 5 (SAMPLE CODE) ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 	if (globalOpts.test_code){
