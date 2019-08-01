@@ -671,7 +671,7 @@ void gbdk_c_code_output(PICDATA *gbpic, FILE *f){
 	}
 
 	/* ~~~~~~~~~~~~~~ STEP 3 (TILES) ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-	fprintf (f, "const unsigned char %s_dat[] = {\n", globalOpts.name);
+	fprintf (f, "const unsigned char %s_tiles[] = {\n", globalOpts.name);
 	for (t=0; t<gbpic->total_tiles; t++){
 		fputs ("\t", f);
 		for (y=0;y<gbpic->tileh;y++){

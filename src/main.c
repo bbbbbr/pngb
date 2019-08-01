@@ -145,6 +145,24 @@ void print_help(){
 	printf ("   pngb -Kgpcmsev -name my_tileset tileset.png tileset.c\n\n");
 }
 
+void ExtractFileName(char* path, char* file_name, int include_bank) {
+	char* slash_pos = strrchr(path, '/');
+	if(slash_pos == 0)
+		slash_pos = strrchr(path, '\\');
+	if(slash_pos != 0)
+		slash_pos ++;
+	else
+		slash_pos = path;
+
+	char* dot_pos = include_bank ? strrchr(slash_pos, '.') : strchr(slash_pos, '.');
+	if(dot_pos == 0) {
+ 		strcpy(file_name, slash_pos);
+	} else {
+		strncpy(file_name, slash_pos, dot_pos - slash_pos);
+		file_name[dot_pos - slash_pos] = '\0';
+	}
+}
+
 /*###########################################################################
  ##                                                                        ##
  ##                                   M A I N                              ##
@@ -239,6 +257,7 @@ int main(int argc, char *argv[]){
 			if (infile[0] == 0) {
 				/* assume this is the input file */
 				strncpy (infile, argv[a], sizeof(infile)-1);
+				ExtractFileName(infile, globalOpts.name, 1);
 			} else if (outfile[0] == 0){
 				/* if the input file is already defined, this must be the
 				output file */
