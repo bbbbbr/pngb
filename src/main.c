@@ -41,7 +41,7 @@ void reset_opts(){
 	memset((void *)&globalOpts, 0, sizeof(globalOpts));
 
 	globalOpts.type = TARGET_BKG;
-	globalOpts.baseindex = 1;
+	globalOpts.baseindex = 0;
 	strcpy(globalOpts.name, "gbpic");
 }
 
