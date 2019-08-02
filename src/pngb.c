@@ -684,8 +684,8 @@ void gbdk_c_code_output(PICDATA *gbpic, FILE *f){
 	
 	fprintf(f, "\n#include \"TilesInfo.h\"\n");
 	fprintf(f, "const struct TilesInfoInternal %s_tiles_internal = {\n", globalOpts.name);
-	fprintf(f, "\t%d, //width\n", 8);
-	fprintf(f, "\t%d, //height\n", 8);
+	fprintf(f, "\t%d, //tile width\n", 8);
+	fprintf(f, "\t%d, //tile height\n", 8);
 	fprintf(f, "\t%d, //num_tiles\n", gbpic->total_tiles);
 	fprintf(f, "\t%s_tiles_data, //tiles\n", globalOpts.name);
 	fprintf(f, "\t0, //CGB palette\n");
@@ -723,8 +723,6 @@ void gbdk_c_code_output(PICDATA *gbpic, FILE *f){
 	
 	fprintf(f, "\n#include \"MapInfo.h\"\n");
 	fprintf(f, "const struct MapInfoInternal %s_internal = {\n", globalOpts.name);
-	fprintf(f, "\t%d, //width\n", gbpic->cols);
-	fprintf(f, "\t%d, //height\n", gbpic->rows);
 	fprintf(f, "\t%s_map, //map\n", globalOpts.name);
 	fprintf(f, "\t%s, //attributes\n", "0"); //TODO
 	fprintf(f, "\t&%s_tiles, //tiles info\n", globalOpts.name);
@@ -732,6 +730,8 @@ void gbdk_c_code_output(PICDATA *gbpic, FILE *f){
 
 	fprintf(f, "\nstruct MapInfo %s = {\n", globalOpts.name);
 	fprintf(f, "\t%d, //bank\n", globalOpts.bank);
+	fprintf(f, "\t%d, //width\n", gbpic->cols);
+	fprintf(f, "\t%d, //height\n", gbpic->rows);
 	fprintf(f, "\t&%s_internal, //data\n", globalOpts.name);
 	fprintf(f, "};\n");
 	
