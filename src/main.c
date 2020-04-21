@@ -2,7 +2,7 @@
 **	main.c
 **
 **	Entry point and command line parsing for the PNGB graphics converter.
-**	
+**
 ** 	Copyright (c) 2015 Elias Zacarias
 **
 ** 	Permission is hereby granted, free of charge, to any person obtaining a
@@ -11,7 +11,7 @@
 ** 	the rights to use, copy, modify, merge, publish, distribute, sublicense,
 ** 	and/or sell copies of the Software, and to permit persons to whom the
 ** 	Software is furnished to do so, subject to the following conditions:
-** 	
+**
 ** 	The above copyright notice and this permission notice shall be included in
 ** 	all copies or substantial portions of the Software.
 
@@ -22,7 +22,7 @@
 ** 	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 ** 	FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 ** 	IN THE SOFTWARE.
-** 	
+**
 *****************************************************************************/
 #include "pngb.h"
 
@@ -107,9 +107,9 @@ char *transp_to_string(char *dest, int mlen){
 
 	if (globalOpts.transparent < 0){
 		rgb = -(globalOpts.transparent+1);
-		snprintf(dest, mlen-1, "RGB(%d, %d, %d)",(rgb>>16) & 0xff, (rgb>>8) & 0xff, (rgb) & 0xff);
+		snprintf(dest, mlen-1, "RGB(%ld, %ld, %ld)",(rgb>>16) & 0xff, (rgb>>8) & 0xff, (rgb) & 0xff);
 	}else {
-		snprintf(dest, mlen-1, "%d", globalOpts.transparent);
+		snprintf(dest, mlen-1, "%ld", globalOpts.transparent);
 	}
 	return dest;
 }
@@ -120,7 +120,7 @@ char *transp_to_string(char *dest, int mlen){
 void print_help(){
 	printf ("\nPNGB v%d.%02d ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::\n", PNGB_VERSION_MAJOR, PNGB_VERSION_MINOR);
 	printf ("\nConverts PNG images to GB (GBDK) C Code\n");
-	printf ("\n:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::\n\n", PNGB_VERSION_MAJOR, PNGB_VERSION_MINOR);
+	printf ("\n:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::\n\n");
 	printf ("Usage\n");
 	printf ("   pngb <options> {input file} {output file}\n\n");
 	printf ("Options\n");
@@ -285,7 +285,7 @@ int main(int argc, char *argv[]){
 	output = fopen(outfile, "w");
 	PICDATA *gbdata = process_image (infile);
 	/* IMPORTANT! CALL THIS BEFORE CODE OUTPUT! This will fix wrong values */
-	gb_check_warnings (gbdata); 
+	gb_check_warnings (gbdata);
 
 	verbose ("\n<PARAMETERS DEBUG>\nINPUT -\n");
 	verbose (" File            : %s\n", infile);
@@ -304,7 +304,7 @@ int main(int argc, char *argv[]){
 	verbose (" Palette Index   : %d\n", globalOpts.palnumber);
 	if (globalOpts.test_code || globalOpts.create_map){
 		verbose (" Tile Base Index : %d\n", globalOpts.baseindex);
-	}	
+	}
 
 	verbose ("\nADDITIONAL ACTIONS -\n");
 	if (!globalOpts.grayscale){
