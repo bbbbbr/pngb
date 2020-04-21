@@ -29,6 +29,8 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "tilemap_actions.h"
+
 /*###########################################################################
  ##                                                                        ##
  ##                        M I S C   F U N C T I O N S                     ##
@@ -118,6 +120,10 @@ char *transp_to_string(char *dest, int mlen){
  * Displays the usage info.                                                 *
  ****************************************************************************/
 void print_help(){
+    printf ("Usage\n");
+    printf ("   pngb {input file}\n\n");
+
+/*
 	printf ("\nPNGB v%d.%02d ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::\n", PNGB_VERSION_MAJOR, PNGB_VERSION_MINOR);
 	printf ("\nConverts PNG images to GB (GBDK) C Code\n");
 	printf ("\n:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::\n\n");
@@ -144,6 +150,7 @@ void print_help(){
 	printf ("   pngb -S spritesheet.png sprite.h\n");
 	printf ("   pngb -S -base 1 -pal 2 -name my_sprite spritesheet.png sprite.h\n");
 	printf ("   pngb -Kgpcmsev -name my_tileset tileset.png tileset.c\n\n");
+*/
 }
 
 void ExtractFileName(char* path, char* file_name, int include_bank) {
@@ -277,14 +284,26 @@ int main(int argc, char *argv[]){
 			}
 		}
 	}
+
+    if (!infile[0]) {
+        print_help();
+        return 0;
+    }
+    else {
+        // Found an input filename, process and export the image
+        tilemap_process_image (infile);
+    }
+
+/*
 	if (!infile[0] || !outfile[0]) {
 		print_help();
 		return 0;
 	}
 
 	output = fopen(outfile, "w");
-	PICDATA *gbdata = process_image (infile);
-	/* IMPORTANT! CALL THIS BEFORE CODE OUTPUT! This will fix wrong values */
+ 	PICDATA *gbdata = process_image (infile);
+	// IMPORTANT! CALL THIS BEFORE CODE OUTPUT! This will fix wrong values
+
 	gb_check_warnings (gbdata);
 
 	verbose ("\n<PARAMETERS DEBUG>\nINPUT -\n");
@@ -314,10 +333,12 @@ int main(int argc, char *argv[]){
 	verbose ("\n");
 
 	fprintf	(output, "#pragma bank %d\n", globalOpts.bank);
-	code_disclaimer_c (infile, outfile, output);
-	gbdk_c_code_output (gbdata, output);
-	free_gb_pict(gbdata);
+//	code_disclaimer_c (infile, outfile, output);
+//	gbdk_c_code_output (gbdata, output);
+    if (gbdata)
+	   free_gb_pict(gbdata);
 
 	if (output) fclose (output);
+*/
 	return 0;
 }

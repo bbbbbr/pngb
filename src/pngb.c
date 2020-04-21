@@ -5,7 +5,7 @@
 **	Currently this module contains all the code for the converter except for
 **	the PNG loading routines (We are using LodePNG for that) and the program
 **  entry point (and command line parsing), which are in main.c.
-**	
+**
 ** 	Copyright (c) 2015 Elias Zacarias
 **
 ** 	Permission is hereby granted, free of charge, to any person obtaining a
@@ -14,7 +14,7 @@
 ** 	the rights to use, copy, modify, merge, publish, distribute, sublicense,
 ** 	and/or sell copies of the Software, and to permit persons to whom the
 ** 	Software is furnished to do so, subject to the following conditions:
-** 	
+**
 ** 	The above copyright notice and this permission notice shall be included in
 ** 	all copies or substantial portions of the Software.
 
@@ -25,7 +25,7 @@
 ** 	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 ** 	FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 ** 	IN THE SOFTWARE.
-** 	
+**
 *****************************************************************************/
 #include <time.h>
 #include "lodepng.h"
@@ -33,6 +33,7 @@
 
 #include <stdio.h>
 #include <ctype.h>
+
 
 #define MIN(a, b) (a < b ? a : b)
 
@@ -368,7 +369,9 @@ void do_tile_reduction(PICDATA *pic){
 	}
 	verbose ("-- %d tiles reduced. New tile count: %d\n", old_tTiles - pic->total_tiles, pic->total_tiles);
 }
-	
+
+
+
 /*###########################################################################
  ##                                                                        ##
  ##                        I M A G E   L O A D I N G                       ##
@@ -489,12 +492,12 @@ PICDATA *process_image(const char* filename){
 		}
 		/*	NOTE: Palette sorting is only needed in non-grayscale mode.
 			Our grayscale palette is already sorted */
-		if (globalOpts.sort_palette) {	
+		if (globalOpts.sort_palette) {
 			verbose ("-- RE-ARRANGING THE PALETTE FROM LIGHT TO DARK\n");
 			if (tColors < 4){
 				/* Resize the palette to 4 colors */
 				palette = (RGB_PALETTE_ENTRY *)realloc (palette, 4*sizeof(RGB_PALETTE_ENTRY));
-	
+
 				/* fill the new entries with a dummy color (let's use black) */
 				memset (&palette[tColors], 0, sizeof(RGB_PALETTE_ENTRY)*(4-tColors));
 
@@ -616,7 +619,7 @@ void gb_check_warnings(PICDATA *gbpic){
 			if (gbpic->total_tiles + globalOpts.baseindex > 256) printf("\nWARNING: There are more than 256 tiles in %s_dat[]\n\tor the chosen base index is too high. This may\n\tcause problems with set_%s_data().\n", globalOpts.name, func_name);
 		} else {
 			if (gbpic->total_tiles + globalOpts.baseindex > 40) printf("\nWARNING: There are more than 40 frames in %s_dat[]\n\tor the chosen base index is too high. This may\n\tcause problems with set_sprite_data().\n", globalOpts.name);
-			if (gbpic->cols*gbpic->rows > 40 || gbpic->cols > 10) printf("\nWARNING: The picture is more than 40 sprites in size or\n\tmore than 10 sprites wide. The sample code won't\n\tdisplay correctly.\n", globalOpts.name);
+			if (gbpic->cols*gbpic->rows > 40 || gbpic->cols > 10) printf("\nWARNING: The picture is more than 40 sprites in size or\n\tmore than 10 sprites wide. The sample code won't\n\tdisplay correctly.\n");
 		}
 	}
 }
@@ -681,7 +684,7 @@ void gbdk_c_code_output(PICDATA *gbpic, FILE *f){
 		}
 		fputs ((t<gbpic->total_tiles-1? ",\n" : "\n};\n\n"), f);
 	}
-	
+
 	fprintf(f, "\n#include \"TilesInfo.h\"\n");
 	fprintf(f, "const struct TilesInfoInternal %s_tiles_internal = {\n", globalOpts.name);
 	fprintf(f, "\t%d, //tile width\n", 8);
@@ -695,8 +698,8 @@ void gbdk_c_code_output(PICDATA *gbpic, FILE *f){
 	fprintf(f, "\t%d, //bank\n", globalOpts.bank);
 	fprintf(f, "\t&%s_tiles_internal, //data\n", globalOpts.name);
 	fprintf(f, "};\n\n");
-	
-	
+
+
 	/* ~~~~~~~~~~~~~~ STEP 3 (TILE/SPRITE ATTRIBUTES) ~~~~~~~~~~~~~~~~~~~~~~*/
 	/*	For the most of it, the "attributes" are the palette, which is the
 		lowest 3 bits for both sprites and BG/WIN tiles. */
@@ -709,7 +712,7 @@ void gbdk_c_code_output(PICDATA *gbpic, FILE *f){
 		}
 		fputs("\n};\n\n", f);
 	}
-	
+
 	/* ~~~~~~~~~~~~~~ STEP 4 (TILE/SPRITE MAP) ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 	if (globalOpts.create_map){
 		fprintf (f, "const unsigned char %s_map[] = {", globalOpts.name);
@@ -720,7 +723,7 @@ void gbdk_c_code_output(PICDATA *gbpic, FILE *f){
 		}
 		fputs("\n};\n\n", f);
 	}
-	
+
 	fprintf(f, "\n#include \"MapInfo.h\"\n");
 	fprintf(f, "const struct MapInfoInternal %s_internal = {\n", globalOpts.name);
 	fprintf(f, "\t%s_map, //map\n", globalOpts.name);
@@ -734,7 +737,7 @@ void gbdk_c_code_output(PICDATA *gbpic, FILE *f){
 	fprintf(f, "\t%d, //height\n", gbpic->rows);
 	fprintf(f, "\t&%s_internal, //data\n", globalOpts.name);
 	fprintf(f, "};\n");
-	
+
 	/* ~~~~~~~~~~~~~~ STEP 5 (SAMPLE CODE) ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 	if (globalOpts.test_code){
 		if (globalOpts.type == TARGET_SPRITE){
@@ -781,8 +784,8 @@ void gbdk_c_code_output(PICDATA *gbpic, FILE *f){
 			fprintf (f, "\t\t\tif (i >= %s_tsize) break;\n", globalOpts.name);
 			fprintf (f, "\t\t\tset_%s_sprite (i, %s_map[i]%s, %s_att[%s_map[i]-%s_base], xt+%dU, yt+%dU);\n", globalOpts.name, globalOpts.name, (is8x16Mode() ? "*2" : ""), globalOpts.name, globalOpts.name, globalOpts.name, dx, dy);
 			fprintf (f, "\t\t\ti++;\n");
-			fprintf (f, "\t\t}\n", globalOpts.name);
-			fprintf (f, "\t}\n", globalOpts.name);
+			fprintf (f, "\t\t}\n");
+			fprintf (f, "\t}\n");
 			fprintf (f, "\n\tSHOW_SPRITES;\n");
 		}
 
@@ -792,4 +795,4 @@ void gbdk_c_code_output(PICDATA *gbpic, FILE *f){
 	}
 	verbose ("-- Done\n\n");
 }
-	
+
